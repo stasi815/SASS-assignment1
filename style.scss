@@ -1,0 +1,61 @@
+
+
+$size: 200px;
+$border-size: 1px;
+$petals: 5;
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body, html {
+  height: 100%;
+}
+
+/* Container styles */
+.container {
+  width: $size;
+  height: $size;
+  border: $border-size solid;
+  position: relative;
+
+  & > div {
+    position: absolute;
+    border-radius: 0 70% 40% 70%;
+    border: $border-size solid;
+    width: $size * .6;
+    height: $size * .6;
+    /* Position these in the center */
+    left: 10px;
+    top: 50px;
+    /* Rotate 45 deg points the point at the top */
+    transform: rotate(45deg);
+    /* Move the point of transformation to the lower right */
+    transform-origin: 90px 90px;
+    animation-duration: 6000ms;
+    animation-iteration-count: 1;
+    /* Important! Without this the elements will snap
+    to their starting positions when the animation ends! */
+    animation-fill-mode: forwards;
+  }
+  /* These styles apply to individual children */
+  @for $i from 1 through $petals {
+    $hue: ($i - 1) * 60;
+    & > div {
+      &:nth-child(#{$i}) {
+        animation-name: bloom-#{$i};
+        background-color: hsla($hue, 100%, 50%, 0.21);
+      }
+    }
+  }
+}
+
+@for $i from 1 through $petals {
+  $angle: ($i - 2) * 45deg;
+  @keyframes bloom-#{$i} {
+    0% { transform: rotate(45deg); }
+    100% { transform: rotate($angle); }
+  }
+}
